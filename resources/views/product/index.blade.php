@@ -10,10 +10,41 @@
                 }else{
                     this.cartItems.push({ ...produk, quantity: 1}); 
                 }
+            },
+
+            clearItems(){
+                this.cartItems = []; 
+            },
+
+            checkout() {
+                if (this.cartItems.length === 0) return alert('cart is empty!');
+    
+                fetch('/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ items: this.cartItems })
+                })
+                .then(async response => {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Server Error');
+                    }
+                    return data;
+                })
+                .then(data => {
+                    alert(data.message);
+                    this.clearItems(); 
+                    {{-- this.cartOpen = false; --}}
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Checkout Failed: ' + error.message);
+                });
             }
         }
-        
-
     "
     class="flex">
         <section class="flex flex-wrap gap-2">
@@ -40,8 +71,8 @@
         <section 
             class="min-w-[20svw] rounded-lg bg-stone-700 flex flex-col h-[90svh] 
             sticky top-4">
-            <button class="bg-emerald-600 py-2 px-4">Buat Transaksi</button>
-            <span class="text-emerald-400" x-text="'Rp ' + cartItems.reduce((acc, i) => (acc + i.harga) * i.quantity, 0).toLocaleString('id-ID')"></span>
+            <button @click="checkout()" class="bg-emerald-600 py-2 px-4">Buat Transaksi</button>
+            <span x-text="'Rp ' + cartItems.reduce((acc, i) => acc + (i.harga * i.quantity), 0).toLocaleString('id-ID')"></span>
             <section class="text-slate-200">   
                 <template x-for="(item, index) in cartItems" :key="item.id">
                     <div class="flex justify-between items-center bg-stone-600 p-3 rounded-xl border border-stone-700">
