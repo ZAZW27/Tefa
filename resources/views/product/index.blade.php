@@ -1,4 +1,4 @@
-<x-layouts::app :title="__('Dashboard')">
+<x-layouts::app :title="__('Shoppe')">
     <main
     x-data="{
             cartItems: [], 
@@ -48,6 +48,9 @@
     "
     class="flex">
         <section class="flex flex-wrap gap-2">
+            <a href="{{ route('produks.create') }}">
+                Tambah
+            </a>
             @foreach ($products as $item )
                 <section class="bg-stone-700 p-2 rounded-lg">
                     <img class="w-62 h-62" src="{{ $item->gambar }}" alt="{{ $item->nama }}">
