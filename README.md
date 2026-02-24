@@ -14,4 +14,6 @@ atau dapat copy paste saja .env pada projek sebelumnya
 7. **Jalankan Server:** `php artisan serve`
 ---
 
+
 **Note:** Pastikan PHP dan Composer sudah terinstall.
+
